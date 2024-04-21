@@ -125,12 +125,15 @@ class XTSAES_RUNNER:
 
 
 if __name__ == '__main__':
-    file_type = 'txt'
-
     xtsaes_runner = XTSAES_RUNNER()
 
-    arguments = sys.argv[1:]
-    if arguments and (arguments[0] == '-d'):
+    # file_type = 'txt'
+    file_type = input('File type: (txt, png, ...)\n')
+
+    mode = input('Mode: (1: {enc}, 2: {dec})\n'.format(enc=ENCRYPTION, dec=DECRYPTION))
+    mode = DECRYPTION if mode == '2' else ENCRYPTION
+
+    if mode  == DECRYPTION:
         xtsaes_runner.mode = 'decryption'
         xtsaes_runner.inverse_mode = 'encryption'
 
