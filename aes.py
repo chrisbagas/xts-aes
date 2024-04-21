@@ -107,7 +107,7 @@ class AES:
                     temporary_key[i] = aes_tables.s_box[temporary_key[i]]
 
             for i in range(0, 4):
-                temporary_key[i] ^= expanded_key[-32 + i]
+                temporary_key[i] ^= expanded_key[-16 + i]
 
             expanded_key += temporary_key
             step = (step + 1) % 8

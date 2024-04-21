@@ -37,12 +37,12 @@ class XTSAES_RUNNER:
         return hex_data
     
     def write_hex_file(self, hex_data, file_type):
-        file_path = './output/output'
-        file_path += '.' + file_type
+        file_path = './output/'
+        file_output = 'output.' + file_type
         
         if self.mode == ENCRYPTION:
-            file_path += '.txt'
-
+            file_output += '.txt'
+        file_path += file_output
         binary_data = bytes.fromhex(hex_data)
 
         print('{name} (data): {data}'.format(name=TEXT_TYPES[self.inverse_mode], data=binary_data))
@@ -53,6 +53,7 @@ class XTSAES_RUNNER:
             file.write(binary_data)
             print('{name} (hex) : {data}'.format(name=TEXT_TYPES[self.inverse_mode], data=hex_data))
             print('{name} (data): {data}'.format(name=TEXT_TYPES[self.inverse_mode], data=binary_data))
+        return binary_data, file_output
 
     def read_hex_string(name):
         try:
@@ -94,22 +95,21 @@ class XTSAES_RUNNER:
             raise ValueError("Invalid padding length")
         return str[:-padding_length]
 
-    def run(self, input_file_path, file_type):
+    def run(self, input_file_path, file_type, key_path):
         # === pre-processing === #
         # key getter
-        key_path = './input/.key'
-        key = xtsaes_runner.read_file('key', key_path)
-        if len(key) != 64:
-            sys.exit('key should be 64-byte')
+        key = self.read_file('key', key_path)
+        if len(key) != 32:
+            sys.exit('key should be 32-byte')
 
         # tweak getter
         tweak_path = './input/.tweak'
-        tweak = xtsaes_runner.read_file('tweak', tweak_path)
+        tweak = self.read_file('tweak', tweak_path)
         if len(tweak) != 16:
             sys.exit('tweak should be 16-byte')
 
         # get file input
-        text = xtsaes_runner.read_hex_file(input_file_path)
+        text = self.read_hex_file(input_file_path)
 
         # === XTSAES processing === #
         xts_aes = XTSAES(key, tweak)
@@ -121,7 +121,8 @@ class XTSAES_RUNNER:
 
         # === post-processing === #
         # write file output
-        xtsaes_runner.write_hex_file(result, file_type)
+        binary_data, file_output = self.write_hex_file(result, file_type)
+        return binary_data, file_output
 
 
 if __name__ == '__main__':
@@ -141,7 +142,7 @@ if __name__ == '__main__':
         input_file_path = './input/input.' + file_type
     else:
         input_file_path = './output/output.'+ file_type + '.txt'
-
-    xtsaes_runner.run(input_file_path, file_type)
+    key_path='./input/.key'
+    xtsaes_runner.run(input_file_path, file_type,key_path)
 
 # text, image, video, audio, binary executable code
