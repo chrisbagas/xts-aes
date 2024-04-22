@@ -99,8 +99,8 @@ class XTSAES_RUNNER:
         # === pre-processing === #
         # key getter
         key = self.read_file('key', key_path)
-        if len(key) != 32:
-            sys.exit('key should be 32-byte')
+        if len(key) != 64:
+            sys.exit('key should be 64-hex')
 
         # tweak getter
         tweak_path = './input/.tweak'

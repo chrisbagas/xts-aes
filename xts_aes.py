@@ -4,8 +4,8 @@ from aes import AES
 
 class XTSAES:
     def __init__(self, key, tweak):
-        self.aes = AES(key[:16])
-        self.tweak = AES(key[16:]).encrypt(tweak)
+        self.aes = AES(key[:32])
+        self.tweak = AES(key[32:]).encrypt(tweak)
 
     def encrypt(self, plain_text):
         return self._process_data(plain_text, self.aes.encrypt, True)
